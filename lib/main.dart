@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sample_app/second_screen.dart';
+import 'package:sample_app/screens/second_screen.dart';
 import 'package:sample_app/resource/global/provider.dart';
 import 'package:sample_app/rootpage.dart';
 

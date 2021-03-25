@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sample_app/notify_screen.dart';
+import 'package:sample_app/screens/notify_screen.dart';
 import 'package:sample_app/resource/notify/provider.dart';
 import 'package:sample_app/resource/notify/widget_observer.dart';
 import 'package:sample_app/widgets/permission_check.dart';
