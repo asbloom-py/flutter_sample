@@ -67,7 +67,7 @@ jobs:
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
-          apiToken: f96e5b76bac4e8cc7bdb06bb3300286b32a80
+          apiToken: NBwzSYeLmNbDmh-EO3vF6Kx1Y60k9cFeo3r_m5Ol
           # apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: e836a3e7b34c82e37e409c93f2655726
           projectName: dev-daichi-shop-1075c8f8
