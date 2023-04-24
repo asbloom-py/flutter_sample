@@ -1,12 +1,76 @@
 on:
   repository_dispatch:
     types: [test_result]
+env:
+  flutter_version: "3.3.10"
 
 jobs:
   run_if_failure:
     if: ${{ !github.event.client_payload.passed }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     steps:
       - env:
           MESSAGE: ${{ github.event.client_payload.message }}
         run: echo $MESSAGE
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: flutter setup
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: "stable"
+          cache: true
+      - run: flutter --version
+      - name: Cache pubspec dependencies
+        id: cache-pubspec
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Create dot env file
+        run: |
+          touch test/.env
+          echo "MAPBOX_ACCOUNT=${{ secrets.MAPBOX_ACCOUNT }}" >> test/.env
+          echo "MAPBOX_TILE_SET_ID=${{ secrets.MAPBOX_TILE_SET_ID }}" >> test/.env
+          echo "MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}" >> test/.env
+        shell: bash
+      - name: pub get
+        if: steps.cache-pubspec.outputs.cache-hit != 'true'
+        run: flutter pub get
+      - name: flutter test
+        run: flutter build web --release
+      # - name: flutter test
+      #   run: flutter test --no-test-assets --coverage --coverage-path=~/coverage/lcov.info
+      # - uses: VeryGoodOpenSource/very_good_coverage@v1
+      #   with:
+      #     path: "~/coverage/lcov.info"
+      #     min_coverage: 20
+      #     exclude: "**/*.g.dart **/*.freezed.dart lib/src/constants/test/*.dart lib/src/constants/layout/*.dart"
+      # - uses: codecov/codecov-action@v1
+      #   with:
+      #     token: ${{secrets.CODECOV_TOKEN}}
+      #     file: ~/coverage/lcov.info
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: f96e5b76bac4e8cc7bdb06bb3300286b32a80
+          # apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: e836a3e7b34c82e37e409c93f2655726
+          projectName: dev-daichi-shop-1075c8f8
+          directory: build/web
+          # Optional: Enable this if you want to have GitHub Deployments triggered
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
