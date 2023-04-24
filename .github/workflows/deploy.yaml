@@ -46,7 +46,7 @@ jobs:
         #     echo "MAPBOX_ACCOUNT=${{ secrets.MAPBOX_ACCOUNT }}" >> test/.env
         #     echo "MAPBOX_TILE_SET_ID=${{ secrets.MAPBOX_TILE_SET_ID }}" >> test/.env
         #     echo "MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}" >> test/.env
-        shell: bash
+        # shell: bash
       - name: pub get
         if: steps.cache-pubspec.outputs.cache-hit != 'true'
         run: flutter pub get
