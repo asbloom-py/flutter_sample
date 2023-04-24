@@ -37,15 +37,15 @@ jobs:
           key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             build-pubspec-
-      - uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Create dot env file
-        run: |
-          touch test/.env
-          echo "MAPBOX_ACCOUNT=${{ secrets.MAPBOX_ACCOUNT }}" >> test/.env
-          echo "MAPBOX_TILE_SET_ID=${{ secrets.MAPBOX_TILE_SET_ID }}" >> test/.env
-          echo "MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}" >> test/.env
+        # - uses: webfactory/ssh-agent@v0.5.4
+        #   with:
+        #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        # - name: Create dot env file
+        #   run: |
+        #     touch test/.env
+        #     echo "MAPBOX_ACCOUNT=${{ secrets.MAPBOX_ACCOUNT }}" >> test/.env
+        #     echo "MAPBOX_TILE_SET_ID=${{ secrets.MAPBOX_TILE_SET_ID }}" >> test/.env
+        #     echo "MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}" >> test/.env
         shell: bash
       - name: pub get
         if: steps.cache-pubspec.outputs.cache-hit != 'true'
